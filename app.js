@@ -14,21 +14,29 @@ let todoLists =
     {
       title: "Daily To-Do",
       date: "Today",
-      tasks: [
-        "Stay positive",
-        "Deep clean floors",
-        "Wash windows"
-      ]
+    tasks: [
+  { text: "Stay positive", completed: false },
+  { text: "Deep clean floors", completed: false },
+  { text: "Wash windows", completed: false }
+]
     },
     {
       title: "Work To-Do",
       date: "Tomorrow",
       tasks: [
-        "Reply emails",
-        "Finish UI Design"
-      ]
+  { text: "Reply emails", completed: false },
+  { text: "Finish UI Design", completed: false }
+]
     }
   ];
+
+  todoLists.forEach(list => {
+  list.tasks = list.tasks.map(task =>
+    typeof task === "string"
+      ? { text: task, completed: false }
+      : task
+  );
+});
 
 renderLists();
 
@@ -82,15 +90,20 @@ function renderLists() {
 ${
 list.tasks.map((task,taskIndex)=>`
 
-<li class="task">
+<li class="task ${task.completed ? "completed" : ""}">
 
-<input type="checkbox">
+<input
+  type="checkbox"
+  ${task.completed ? "checked" : ""}
+  onchange="toggleTask(${index},${taskIndex})"
+/>
 
-<span>${task}</span>
+<span>${task.text ?? task}</span>
 
 <button
-onclick="deleteTask(${index},${taskIndex})">
-×
+  class="delete-btn"
+  onclick="deleteTask(${index},${taskIndex})">
+  ×
 </button>
 
 </li>
@@ -119,7 +132,10 @@ function addTask(event, listIndex) {
 
   if (!value) return;
 
-  todoLists[listIndex].tasks.push(value);
+  todoLists[listIndex].tasks.push({
+  text: value,
+  completed: false
+});
 
   saveAndRender();
 }
@@ -138,11 +154,12 @@ function deleteList(index) {
   saveAndRender();
 }
 
-function toggleTask(checkbox) {
+function toggleTask(listIndex, taskIndex) {
 
-  checkbox.parentElement.classList.toggle(
-    "completed"
-  );
+  todoLists[listIndex].tasks[taskIndex].completed =
+    !todoLists[listIndex].tasks[taskIndex].completed;
+
+  saveAndRender();
 }
 
 function saveAndRender() {

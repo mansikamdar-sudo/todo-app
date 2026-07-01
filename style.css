@@ -183,6 +183,24 @@ text-decoration:line-through;
 opacity:.5;
 }
 
+.delete-btn{
+    opacity:0;
+    visibility:hidden;
+
+    border:none;
+    background:transparent;
+
+    font-size:22px;
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.task:hover .delete-btn{
+    opacity:1;
+    visibility:visible;
+}
+
 .add-task{
 width:100%;
 
